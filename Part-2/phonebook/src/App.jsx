@@ -1,14 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Filter from '../components/Filter'
 import Form from '../components/Form'
+import Notification from '../components/Notification'
 import Persons from '../components/Persons'
 import personService from './services/persons'
+import './phonebook.css'
 
 const App = () => {
   const [persons, setPersons] = useState([  ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const notificationTimeoutRef = useRef(null)
 
 
   // npm install axios
@@ -19,6 +23,27 @@ const App = () => {
       setPersons(initialPersons)
     })
   },[])
+
+  useEffect(() => {
+    return () => {
+      if (notificationTimeoutRef.current) {
+        clearTimeout(notificationTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const showNotification = (message) => {
+    setNotificationMessage(message)
+
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current)
+    }
+
+    notificationTimeoutRef.current = setTimeout(() => {
+      setNotificationMessage(null)
+      notificationTimeoutRef.current = null
+    }, 5000)
+  }
 
   const addPersons = (event) => {
     event.preventDefault()
@@ -39,13 +64,14 @@ const App = () => {
 
       personService.update(existingPerson.id, changedPerson)
         .then(returnedPerson => {
-          setPersons(
-            persons.map(person =>
+          setPersons(currentPersons =>
+            currentPersons.map(person =>
               person.id !== existingPerson.id ? person : returnedPerson
             )
           )
           setNewName('')
           setNewNumber('')
+          showNotification(`Changed number for ${returnedPerson.name}`)
         })
       return
     }
@@ -57,9 +83,10 @@ const App = () => {
 
     personService.create(person)
       .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
+        setPersons(currentPersons => currentPersons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        showNotification(`Added ${returnedPerson.name}`)
       })
   }
 
@@ -70,7 +97,9 @@ const App = () => {
 
     personService.remove(personToDelete.id)
       .then(() => {
-        setPersons(persons.filter(person => person.id !== personToDelete.id))
+        setPersons(currentPersons =>
+          currentPersons.filter(person => person.id !== personToDelete.id)
+        )
       })
   }
 
@@ -88,8 +117,9 @@ const App = () => {
   )
 
   return (
-    <div>
+    <div className="phonebook-app">
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter search={search} handleSearchChange={handleSearchChange}/>
       <h2>Add a new</h2>
       <Form 
