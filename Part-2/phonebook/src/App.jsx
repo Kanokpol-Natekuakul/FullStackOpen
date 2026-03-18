@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
-  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
   const notificationTimeoutRef = useRef(null)
 
 
@@ -32,15 +32,15 @@ const App = () => {
     }
   }, [])
 
-  const showNotification = (message) => {
-    setNotificationMessage(message)
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type })
 
     if (notificationTimeoutRef.current) {
       clearTimeout(notificationTimeoutRef.current)
     }
 
     notificationTimeoutRef.current = setTimeout(() => {
-      setNotificationMessage(null)
+      setNotification(null)
       notificationTimeoutRef.current = null
     }, 5000)
   }
@@ -73,6 +73,15 @@ const App = () => {
           setNewNumber('')
           showNotification(`Changed number for ${returnedPerson.name}`)
         })
+        .catch(() => {
+          showNotification(
+            `Information of ${existingPerson.name} has already been removed from server`,
+            'error'
+          )
+          setPersons(currentPersons =>
+            currentPersons.filter(person => person.id !== existingPerson.id)
+          )
+        })
       return
     }
 
@@ -88,6 +97,9 @@ const App = () => {
         setNewNumber('')
         showNotification(`Added ${returnedPerson.name}`)
       })
+      .catch(() => {
+        showNotification(`Failed to add ${person.name}`, 'error')
+      })
   }
 
   const deletePerson = (personToDelete) => {
@@ -97,6 +109,15 @@ const App = () => {
 
     personService.remove(personToDelete.id)
       .then(() => {
+        setPersons(currentPersons =>
+          currentPersons.filter(person => person.id !== personToDelete.id)
+        )
+      })
+      .catch(() => {
+        showNotification(
+          `Information of ${personToDelete.name} has already been removed from server`,
+          'error'
+        )
         setPersons(currentPersons =>
           currentPersons.filter(person => person.id !== personToDelete.id)
         )
@@ -119,7 +140,7 @@ const App = () => {
   return (
     <div className="phonebook-app">
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification notification={notification} />
       <Filter search={search} handleSearchChange={handleSearchChange}/>
       <h2>Add a new</h2>
       <Form 

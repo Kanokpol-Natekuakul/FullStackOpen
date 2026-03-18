@@ -6,11 +6,20 @@
 }
 
 .notification {
-  color: #2f6b2f;
-  background: #edf7ed;
-  border: 3px solid #2f6b2f;
   border-radius: 5px;
   font-size: 1.125rem;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
+}
+
+.notification.success {
+  color: #2f6b2f;
+  background: #edf7ed;
+  border: 3px solid #2f6b2f;
+}
+
+.notification.error {
+  color: #9b1c1c;
+  background: #fdecec;
+  border: 3px solid #9b1c1c;
 }
