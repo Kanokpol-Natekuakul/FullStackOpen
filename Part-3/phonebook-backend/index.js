@@ -47,15 +47,15 @@ app.get('/api/persons', (request, response) => {
     `)
   })
 
-app.get('/api/persons/:id', (request, response) => {
-  const person = persons.find(entry => entry.id === request.params.id)
+  app.get('/api/persons/:id', (request, response) => {
+    const person = persons.find(entry => entry.id === request.params.id)
 
-  if (!person) {
-    return response.status(404).end()
-  }
+    if (!person) {
+      return response.status(404).end()
+    }
 
-  return response.json(person)
-})
+    return response.json(person)
+  })
 
 app.delete('/api/persons/:id', (request, response) => {
   persons = persons.filter(person => person.id !== request.params.id)
