@@ -2,6 +2,7 @@ const cors = require('cors')
 const express = require('express')
 const morgan = require('morgan')
 const config = require('./utils/config')
+const middleware = require('./utils/middleware')
 const { connectToDatabase, Person } = require('./models/person')
 
 const app = express()
@@ -99,19 +100,8 @@ app.post('/api/persons', async (request, response, next) => {
   }
 })
 
-app.use((request, response) => {
-  response.status(404).json({ error: 'unknown endpoint' })
-})
-
-app.use((error, request, response, next) => {
-  console.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).json({ error: 'malformatted id' })
-  }
-
-  return response.status(500).json({ error: 'internal server error' })
-})
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 connectToDatabase()
   .then(() => {
