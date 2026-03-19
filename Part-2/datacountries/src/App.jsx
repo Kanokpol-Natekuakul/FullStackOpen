@@ -45,6 +45,10 @@ const App = () => {
   }, [])
 
   const searchTerm = search.trim().toLowerCase()
+  const showCountry = countryName => {
+    setSearch(countryName)
+  }
+
   const matchingCountries =
     searchTerm === ''
       ? []
@@ -74,7 +78,9 @@ const App = () => {
       </div>
     )
   } else if (matchingCountries.length > 1) {
-    results = <CountryList countries={matchingCountries} />
+    results = (
+      <CountryList countries={matchingCountries} showCountry={showCountry} />
+    )
   } else if (matchingCountries.length === 1) {
     results = <CountryDetails country={matchingCountries[0]} />
   } else if (searchTerm !== '') {
@@ -84,7 +90,7 @@ const App = () => {
   return (
     <main className="app-shell">
       <section className="search-card">
-        <p className="eyebrow">Part 2.18</p>
+        <p className="eyebrow">Part 2.19</p>
         <h1>Data for countries</h1>
         <p className="lead">
           Search for a country to see matching results, key facts, languages,

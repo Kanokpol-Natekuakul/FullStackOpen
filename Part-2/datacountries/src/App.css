@@ -104,9 +104,39 @@
   color: var(--ink);
 }
 
+.country-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
 .country-region {
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.show-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 0.95rem;
+  background: var(--accent);
+  color: #f7fffe;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.show-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(26, 130, 125, 0.22);
+}
+
+.show-button:focus {
+  outline: 3px solid rgba(26, 130, 125, 0.22);
+  outline-offset: 2px;
 }
 
 .country-card {
@@ -197,5 +227,9 @@
   .country-list-item {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .show-button {
+    align-self: stretch;
   }
 }
