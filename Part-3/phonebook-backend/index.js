@@ -1,7 +1,9 @@
+const cors = require('cors')
 const express = require('express')
 const morgan = require('morgan')
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 morgan.token('post-data', request => {
@@ -37,62 +39,62 @@ let persons = [
   },
 ]
 
-  const generateId = () => {
-    let id = Math.floor(Math.random() * 1000000).toString()
+const generateId = () => {
+  let id = Math.floor(Math.random() * 1000000).toString()
 
-    while (persons.some(person => person.id === id)) {
-      id = Math.floor(Math.random() * 1000000).toString()
-    }
-
-    return id
+  while (persons.some(person => person.id === id)) {
+    id = Math.floor(Math.random() * 1000000).toString()
   }
+
+  return id
+}
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
-  app.get('/info', (request, response) => {
-    response.send(`
-      <p>Phonebook has info for ${persons.length} people</p>
-      <p>${new Date()}</p>
-    `)
-  })
+app.get('/info', (request, response) => {
+  response.send(`
+    <p>Phonebook has info for ${persons.length} people</p>
+    <p>${new Date()}</p>
+  `)
+})
 
-  app.get('/api/persons/:id', (request, response) => {
-    const person = persons.find(entry => entry.id === request.params.id)
+app.get('/api/persons/:id', (request, response) => {
+  const person = persons.find(entry => entry.id === request.params.id)
 
-    if (!person) {
-      return response.status(404).end()
-    }
+  if (!person) {
+    return response.status(404).end()
+  }
 
-    return response.json(person)
-  })
+  return response.json(person)
+})
 
-  app.delete('/api/persons/:id', (request, response) => {
-    persons = persons.filter(person => person.id !== request.params.id)
-    response.status(204).end()
-  })
+app.delete('/api/persons/:id', (request, response) => {
+  persons = persons.filter(person => person.id !== request.params.id)
+  response.status(204).end()
+})
 
 app.post('/api/persons', (request, response) => {
   const { name, number } = request.body
 
-    if (!name) {
-      return response.status(400).json({
-        error: 'name is missing',
-      })
-    }
+  if (!name) {
+    return response.status(400).json({
+      error: 'name is missing',
+    })
+  }
 
-    if (!number) {
-      return response.status(400).json({
-        error: 'number is missing',
-      })
-    }
+  if (!number) {
+    return response.status(400).json({
+      error: 'number is missing',
+    })
+  }
 
-    if (persons.some(person => person.name === name)) {
-      return response.status(400).json({
-        error: 'name must be unique',
-      })
-    }
+  if (persons.some(person => person.name === name)) {
+    return response.status(400).json({
+      error: 'name must be unique',
+    })
+  }
 
   const person = {
     id: generateId(),

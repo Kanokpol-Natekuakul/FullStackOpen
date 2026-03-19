@@ -52,36 +52,7 @@ const App = () => {
     )
 
     if (existingPerson) {
-      const confirmReplace = window.confirm(
-        `${newName} is already added to phonebook, replace the old number with a new one?`
-      )
-
-      if (!confirmReplace) {
-        return
-      }
-
-      const changedPerson = { ...existingPerson, number: newNumber }
-
-      personService.update(existingPerson.id, changedPerson)
-        .then(returnedPerson => {
-          setPersons(currentPersons =>
-            currentPersons.map(person =>
-              person.id !== existingPerson.id ? person : returnedPerson
-            )
-          )
-          setNewName('')
-          setNewNumber('')
-          showNotification(`Changed number for ${returnedPerson.name}`)
-        })
-        .catch(() => {
-          showNotification(
-            `Information of ${existingPerson.name} has already been removed from server`,
-            'error'
-          )
-          setPersons(currentPersons =>
-            currentPersons.filter(person => person.id !== existingPerson.id)
-          )
-        })
+      showNotification(`${newName} is already added to phonebook`, 'error')
       return
     }
 
@@ -97,8 +68,11 @@ const App = () => {
         setNewNumber('')
         showNotification(`Added ${returnedPerson.name}`)
       })
-      .catch(() => {
-        showNotification(`Failed to add ${person.name}`, 'error')
+      .catch(error => {
+        showNotification(
+          error.response?.data?.error ?? `Failed to add ${person.name}`,
+          'error'
+        )
       })
   }
 
