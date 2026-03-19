@@ -26,8 +26,8 @@ connectToDatabase(password)
     const number = process.argv[4]
 
     const person = new Person({
-      name,
-      number,
+        name,
+        number,
     })
 
     return person.save()
