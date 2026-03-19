@@ -6,7 +6,7 @@ Exercises and project work for the Full Stack Open course.
 
 Backend source: [Part-3/phonebook-backend](./Part-3/phonebook-backend)
 
-Online application: deployment pending. Add the final Render or Fly.io URL here after the first successful deploy.
+Online application: https://fullstackopen-wp06.onrender.com
 
 ## Render Deployment Notes
 
