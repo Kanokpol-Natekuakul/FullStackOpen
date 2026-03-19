@@ -52,7 +52,38 @@ const App = () => {
     )
 
     if (existingPerson) {
-      showNotification(`${newName} is already added to phonebook`, 'error')
+      if (!window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      )) {
+        return
+      }
+
+      const updatedPerson = {
+        ...existingPerson,
+        number: newNumber
+      }
+
+      personService.update(existingPerson.id, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(currentPersons =>
+            currentPersons.map(person =>
+              person.id === returnedPerson.id ? returnedPerson : person
+            )
+          )
+          setNewName('')
+          setNewNumber('')
+          showNotification(`Updated ${returnedPerson.name}`)
+        })
+        .catch(error => {
+          showNotification(
+            error.response?.data?.error
+              ?? `Information of ${existingPerson.name} has already been removed from server`,
+            'error'
+          )
+          setPersons(currentPersons =>
+            currentPersons.filter(person => person.id !== existingPerson.id)
+          )
+        })
       return
     }
 

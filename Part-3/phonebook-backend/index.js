@@ -64,6 +64,38 @@ app.delete('/api/persons/:id', async (request, response, next) => {
   }
 })
 
+app.put('/api/persons/:id', async (request, response, next) => {
+  const { name, number } = request.body
+
+  if (!name) {
+    return response.status(400).json({
+      error: 'name is missing',
+    })
+  }
+
+  if (!number) {
+    return response.status(400).json({
+      error: 'number is missing',
+    })
+  }
+
+  try {
+    const updatedPerson = await Person.findByIdAndUpdate(
+      request.params.id,
+      { name, number },
+      { returnDocument: 'after', runValidators: true, context: 'query' }
+    )
+
+    if (!updatedPerson) {
+      return response.status(404).end()
+    }
+
+    return response.json(updatedPerson)
+  } catch (error) {
+    next(error)
+  }
+})
+
 app.post('/api/persons', async (request, response, next) => {
   const { name, number } = request.body
 
