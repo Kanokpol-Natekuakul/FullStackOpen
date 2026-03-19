@@ -57,10 +57,10 @@ app.get('/api/persons', (request, response) => {
     return response.json(person)
   })
 
-app.delete('/api/persons/:id', (request, response) => {
-  persons = persons.filter(person => person.id !== request.params.id)
-  response.status(204).end()
-})
+  app.delete('/api/persons/:id', (request, response) => {
+    persons = persons.filter(person => person.id !== request.params.id)
+    response.status(204).end()
+  })
 
 app.post('/api/persons', (request, response) => {
   const { name, number } = request.body
