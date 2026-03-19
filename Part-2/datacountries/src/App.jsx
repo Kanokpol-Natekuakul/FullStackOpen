@@ -90,7 +90,6 @@ const App = () => {
   return (
     <main className="app-shell">
       <section className="search-card">
-        <p className="eyebrow">Part 2.19</p>
         <h1>Data for countries</h1>
         <p className="lead">
           Search for a country to see matching results, key facts, languages,

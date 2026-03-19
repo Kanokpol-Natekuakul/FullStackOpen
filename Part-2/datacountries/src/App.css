@@ -201,6 +201,30 @@
   margin-top: 0.35rem;
 }
 
+.weather-card {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(26, 130, 125, 0.15);
+}
+
+.weather-card h3 {
+  margin: 0 0 0.9rem;
+}
+
+.weather-content p,
+.weather-message {
+  margin: 0.4rem 0;
+}
+
+.weather-icon {
+  width: 5rem;
+  height: 5rem;
+}
+
+.weather-message.error {
+  color: #9f3838;
+}
+
 @media (max-width: 640px) {
   .app-shell {
     padding: 1.5rem 1rem 2.5rem;

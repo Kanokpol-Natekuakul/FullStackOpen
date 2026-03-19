@@ -1,3 +1,5 @@
+import Weather from './Weather'
+
 const CountryDetails = ({ country }) => {
   const capitals = country.capital ?? []
   const languages = Object.values(country.languages ?? {})
@@ -40,6 +42,8 @@ const CountryDetails = ({ country }) => {
           ))}
         </ul>
       </div>
+
+      <Weather country={country} />
     </article>
   )
 }
