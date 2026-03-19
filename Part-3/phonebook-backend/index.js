@@ -26,15 +26,15 @@ let persons = [
   },
 ]
 
-const generateId = () => {
-  let id = Math.floor(Math.random() * 1000000).toString()
+  const generateId = () => {
+    let id = Math.floor(Math.random() * 1000000).toString()
 
-  while (persons.some(person => person.id === id)) {
-    id = Math.floor(Math.random() * 1000000).toString()
+    while (persons.some(person => person.id === id)) {
+      id = Math.floor(Math.random() * 1000000).toString()
+    }
+
+    return id
   }
-
-  return id
-}
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
