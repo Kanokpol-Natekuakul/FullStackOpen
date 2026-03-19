@@ -110,7 +110,7 @@ app.use((request, response) => {
   response.status(404).json({ error: 'unknown endpoint' })
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Phonebook backend running on port ${PORT}`)
 })
