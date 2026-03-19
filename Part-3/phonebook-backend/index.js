@@ -31,7 +31,7 @@ app.get('/api/persons', async (request, response, next) => {
 
 app.get('/info', async (request, response, next) => {
   try {
-    const count = await Person.countDocuments({})
+      const count = await Person.countDocuments({})
     response.send(`
       <p>Phonebook has info for ${count} people</p>
       <p>${new Date()}</p>
@@ -43,7 +43,7 @@ app.get('/info', async (request, response, next) => {
 
 app.get('/api/persons/:id', async (request, response, next) => {
   try {
-    const person = await Person.findById(request.params.id)
+    const person = await  Person.findById(request.params.id)
 
     if (!person) {
       return response.status(404).end()
