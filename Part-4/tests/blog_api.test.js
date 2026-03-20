@@ -11,13 +11,13 @@ const userHelper = require('../utils/user_test_helper')
 
 const api = supertest(app)
 
-const loginAndGetToken = async () => {
+const loginAndGetToken = async (credentials = {
+  username: userHelper.initialUsers[0].username,
+  password: userHelper.initialUsers[0].password,
+}) => {
   const response = await api
     .post('/api/login')
-    .send({
-      username: userHelper.initialUsers[0].username,
-      password: userHelper.initialUsers[0].password,
-    })
+    .send(credentials)
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
@@ -176,18 +176,68 @@ describe('addition of a new blog', () => {
 })
 
 describe('deletion of a blog', () => {
-  test('succeeds with status code 204 if id is valid', async () => {
+  test('succeeds with status code 204 if the creator deletes the blog', async () => {
+    const token = await loginAndGetToken()
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
     assert.ok(!blogsAtEnd.map(blog => blog.title).includes(blogToDelete.title))
+  })
+
+  test('fails with status code 401 if token is missing', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    const response = await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    assert.match(response.body.error, /token missing or invalid/i)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
+  })
+
+  test('fails with status code 403 if a different user tries to delete the blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    const anotherUser = {
+      username: 'anotheruser',
+      name: 'Another User',
+      password: 'salainen',
+    }
+
+    await api
+      .post('/api/users')
+      .send(anotherUser)
+      .expect(201)
+
+    const token = await loginAndGetToken({
+      username: anotherUser.username,
+      password: anotherUser.password,
+    })
+
+    const response = await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(403)
+      .expect('Content-Type', /application\/json/)
+
+    assert.match(response.body.error, /only the creator can delete a blog/i)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
+    assert.ok(blogsAtEnd.map(blog => blog.title).includes(blogToDelete.title))
   })
 })
 
