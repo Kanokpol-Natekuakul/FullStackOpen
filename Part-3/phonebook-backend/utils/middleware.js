@@ -1,8 +1,8 @@
-const unknownEndpoint = (request, response) => {
+const unknownEndpoint = (_request, response) => {
   response.status(404).json({ error: 'unknown endpoint' })
 }
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, _request, response, _next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
