@@ -16,10 +16,10 @@ const loginAndGetToken = async (credentials = {
   password: userHelper.initialUsers[0].password,
 }) => {
   const response = await api
-    .post('/api/login')
-    .send(credentials)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+      .post('/api/login')
+      .send(credentials)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
   return response.body.token
 }
