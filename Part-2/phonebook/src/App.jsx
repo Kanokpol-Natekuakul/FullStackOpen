@@ -75,13 +75,20 @@ const App = () => {
           showNotification(`Updated ${returnedPerson.name}`)
         })
         .catch(error => {
+          if (error.response?.status === 404) {
+            showNotification(
+              `Information of ${existingPerson.name} has already been removed from server`,
+              'error'
+            )
+            setPersons(currentPersons =>
+              currentPersons.filter(person => person.id !== existingPerson.id)
+            )
+            return
+          }
+
           showNotification(
-            error.response?.data?.error
-              ?? `Information of ${existingPerson.name} has already been removed from server`,
+            error.response?.data?.error ?? `Failed to update ${existingPerson.name}`,
             'error'
-          )
-          setPersons(currentPersons =>
-            currentPersons.filter(person => person.id !== existingPerson.id)
           )
         })
       return

@@ -9,6 +9,10 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: 'malformatted id' })
   }
 
+  if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
   return response.status(500).json({ error: 'internal server error' })
 }
 
