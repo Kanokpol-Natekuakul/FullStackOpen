@@ -42,6 +42,28 @@ describe('when there are some blogs saved', () => {
   })
 })
 
+describe('addition of a new blog', () => {
+  test('succeeds with valid data', async () => {
+    const newBlog = {
+      title: 'Async testing in Node',
+      author: 'Codex',
+      url: 'https://example.com/async-testing',
+      likes: 14,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+    assert.ok(blogsAtEnd.map(blog => blog.title).includes(newBlog.title))
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
