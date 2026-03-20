@@ -16,16 +16,21 @@ const usersInDb = async () => {
 
 const seedUsers = async () => {
   await User.deleteMany({})
+  const savedUsers = []
 
   for (const user of initialUsers) {
     const passwordHash = await bcrypt.hash(user.password, 10)
 
-    await new User({
+    const savedUser = await new User({
       username: user.username,
       name: user.name,
       passwordHash,
     }).save()
+
+    savedUsers.push(savedUser)
   }
+
+  return savedUsers
 }
 
 module.exports = {

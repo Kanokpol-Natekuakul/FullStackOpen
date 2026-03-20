@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
   {
@@ -20,7 +21,30 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const seedBlogs = async () => {
+  const user = await User.findOne({})
+
+  if (!user) {
+    throw new Error('Cannot seed blogs without at least one user')
+  }
+
+  await Blog.deleteMany({})
+
+  const savedBlogs = await Blog.insertMany(
+    initialBlogs.map(blog => ({
+      ...blog,
+      user: user._id,
+    }))
+  )
+
+  user.blogs = savedBlogs.map(blog => blog._id)
+  await user.save()
+
+  return savedBlogs
+}
+
 module.exports = {
   initialBlogs,
   blogsInDb,
+  seedBlogs,
 }

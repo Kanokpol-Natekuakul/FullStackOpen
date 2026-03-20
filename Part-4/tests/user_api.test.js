@@ -8,6 +8,7 @@ const app = require('../app')
 const User = require('../models/user')
 const config = require('../utils/config')
 const helper = require('../utils/user_test_helper')
+const blogHelper = require('../utils/test_helper')
 
 const api = supertest(app)
 
@@ -19,6 +20,7 @@ before(async () => {
 
 beforeEach(async () => {
   await helper.seedUsers()
+  await blogHelper.seedBlogs()
 })
 
 describe('when there is initially one user in db', () => {
@@ -27,6 +29,16 @@ describe('when there is initially one user in db', () => {
       .get('/api/users')
       .expect(200)
       .expect('Content-Type', /application\/json/)
+  })
+
+  test('returned users include the blogs they created', async () => {
+    const response = await api.get('/api/users')
+    const user = response.body[0]
+
+    assert.ok(Array.isArray(user.blogs))
+    assert.strictEqual(user.blogs.length, blogHelper.initialBlogs.length)
+    assert.strictEqual(user.blogs[0].title, blogHelper.initialBlogs[0].title)
+    assert.ok(user.blogs[0].id)
   })
 
   test('creation succeeds with a fresh username', async () => {

@@ -5,9 +5,9 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const Blog = require('../models/blog')
 const config = require('../utils/config')
 const helper = require('../utils/test_helper')
+const userHelper = require('../utils/user_test_helper')
 
 const api = supertest(app)
 
@@ -17,8 +17,8 @@ before(async () => {
 })
 
 beforeEach(async () => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+  await userHelper.seedUsers()
+  await helper.seedBlogs()
 })
 
 describe('when there are some blogs saved', () => {
@@ -39,6 +39,16 @@ describe('when there are some blogs saved', () => {
     const blogsAtStart = await helper.blogsInDb()
 
     assert.ok(blogsAtStart[0].id)
+  })
+
+  test('blogs include creator user information', async () => {
+    const response = await api.get('/api/blogs')
+    const blog = response.body[0]
+
+    assert.ok(blog.user)
+    assert.strictEqual(blog.user.username, userHelper.initialUsers[0].username)
+    assert.strictEqual(blog.user.name, userHelper.initialUsers[0].name)
+    assert.ok(blog.user.id)
   })
 })
 
@@ -61,6 +71,25 @@ describe('addition of a new blog', () => {
 
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
     assert.ok(blogsAtEnd.map(blog => blog.title).includes(newBlog.title))
+  })
+
+  test('assigns a creator to the new blog', async () => {
+    const newBlog = {
+      title: 'Blog with creator',
+      author: 'Codex',
+      url: 'https://example.com/creator',
+      likes: 10,
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    assert.ok(response.body.user)
+    assert.strictEqual(response.body.user.username, userHelper.initialUsers[0].username)
+    assert.strictEqual(response.body.user.name, userHelper.initialUsers[0].name)
   })
 
   test('defaults likes to 0 if likes property is missing', async () => {
