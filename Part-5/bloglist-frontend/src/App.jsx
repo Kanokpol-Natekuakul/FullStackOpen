@@ -113,6 +113,22 @@ const App = () => {
     }
   }
 
+  const handleDeleteBlog = async (blog) => {
+    const confirmed = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+
+    if (!confirmed) {
+      return
+    }
+
+    try {
+      await blogService.remove(blog.id)
+      setBlogs(previousBlogs => previousBlogs.filter(currentBlog => currentBlog.id !== blog.id))
+      showNotification(`blog ${blog.title} deleted`, 'success')
+    } catch {
+      showNotification('blog could not be deleted', 'error')
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -159,7 +175,13 @@ const App = () => {
         <BlogForm createBlog={handleCreateBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={handleLikeBlog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          currentUser={user}
+          handleLike={handleLikeBlog}
+          handleDelete={handleDeleteBlog}
+        />
       )}
     </div>
   )
