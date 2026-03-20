@@ -258,6 +258,8 @@ describe('updating a blog', () => {
       .expect('Content-Type', /application\/json/)
 
     assert.strictEqual(response.body.likes, 99)
+    assert.ok(response.body.user)
+    assert.strictEqual(response.body.user.username, userHelper.initialUsers[0].username)
 
     const blogsAtEnd = await helper.blogsInDb()
     const updatedBlogInDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
