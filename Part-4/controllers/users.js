@@ -14,17 +14,33 @@ usersRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: 'username and password are required' })
   }
 
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
+  if (password.length < 3) {
+    return response.status(400).json({ error: 'password must be at least 3 characters long' })
+  }
 
-  const user = new User({
-    username,
-    name,
-    passwordHash,
-  })
+  try {
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(password, saltRounds)
 
-  const savedUser = await user.save()
-  return response.status(201).json(savedUser)
+    const user = new User({
+      username,
+      name,
+      passwordHash,
+    })
+
+    const savedUser = await user.save()
+    return response.status(201).json(savedUser)
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
+    }
+
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      return response.status(400).json({ error: 'username must be unique' })
+    }
+
+    throw error
+  }
 })
 
 module.exports = usersRouter
