@@ -5,9 +5,11 @@ const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URI_TEMPLATE
 const DB_NAME = process.env.NODE_ENV === 'test'
   ? 'bloglistApp-test'
   : 'bloglistApp'
+const SECRET = process.env.SECRET || 'development-only-secret'
 
 module.exports = {
   PORT,
   MONGODB_URI,
   DB_NAME,
+  SECRET,
 }

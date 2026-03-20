@@ -11,6 +11,19 @@ const userHelper = require('../utils/user_test_helper')
 
 const api = supertest(app)
 
+const loginAndGetToken = async () => {
+  const response = await api
+    .post('/api/login')
+    .send({
+      username: userHelper.initialUsers[0].username,
+      password: userHelper.initialUsers[0].password,
+    })
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  return response.body.token
+}
+
 before(async () => {
   mongoose.set('strictQuery', false)
   await mongoose.connect(config.MONGODB_URI, { dbName: config.DB_NAME })
@@ -54,6 +67,7 @@ describe('when there are some blogs saved', () => {
 
 describe('addition of a new blog', () => {
   test('succeeds with valid data', async () => {
+    const token = await loginAndGetToken()
     const newBlog = {
       title: 'Async testing in Node',
       author: 'Codex',
@@ -63,6 +77,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -74,6 +89,7 @@ describe('addition of a new blog', () => {
   })
 
   test('assigns a creator to the new blog', async () => {
+    const token = await loginAndGetToken()
     const newBlog = {
       title: 'Blog with creator',
       author: 'Codex',
@@ -83,6 +99,7 @@ describe('addition of a new blog', () => {
 
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -93,6 +110,7 @@ describe('addition of a new blog', () => {
   })
 
   test('defaults likes to 0 if likes property is missing', async () => {
+    const token = await loginAndGetToken()
     const newBlog = {
       title: 'Blog without likes',
       author: 'Codex',
@@ -101,6 +119,7 @@ describe('addition of a new blog', () => {
 
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -108,7 +127,25 @@ describe('addition of a new blog', () => {
     assert.strictEqual(response.body.likes, 0)
   })
 
+  test('fails with status code 401 if token is missing', async () => {
+    const newBlog = {
+      title: 'No token blog',
+      author: 'Codex',
+      url: 'https://example.com/no-token',
+      likes: 1,
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    assert.match(response.body.error, /token missing or invalid/i)
+  })
+
   test('fails with status code 400 if title is missing', async () => {
+    const token = await loginAndGetToken()
     const newBlog = {
       author: 'Codex',
       url: 'https://example.com/missing-title',
@@ -117,11 +154,13 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
   })
 
   test('fails with status code 400 if url is missing', async () => {
+    const token = await loginAndGetToken()
     const newBlog = {
       title: 'Missing URL blog',
       author: 'Codex',
@@ -130,6 +169,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
   })
