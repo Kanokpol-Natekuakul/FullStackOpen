@@ -8,7 +8,7 @@ if (!config.MONGODB_URI) {
 }
 
 mongoose.set('strictQuery', false)
-mongoose.connect(config.MONGODB_URI, { dbName: 'bloglistApp' })
+mongoose.connect(config.MONGODB_URI, { dbName: config.DB_NAME })
   .then(() => {
     console.log('Connected to MongoDB')
 
