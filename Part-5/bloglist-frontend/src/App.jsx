@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -13,7 +14,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(localStorageKey)
@@ -36,6 +37,22 @@ const App = () => {
     })
   }, [user])
 
+  useEffect(() => {
+    if (notification === null) {
+      return undefined
+    }
+
+    const timeoutId = setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+
+    return () => clearTimeout(timeoutId)
+  }, [notification])
+
+  const showNotification = (message, type) => {
+    setNotification({ message, type })
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -50,9 +67,9 @@ const App = () => {
       setUser(loggedInUser)
       setUsername('')
       setPassword('')
-      setErrorMessage(null)
+      showNotification(`${loggedInUser.name} logged in`, 'success')
     } catch {
-      setErrorMessage('wrong username or password')
+      showNotification('wrong username or password', 'error')
     }
   }
 
@@ -76,17 +93,17 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
-      setErrorMessage(null)
+      showNotification(`a new blog ${createdBlog.title} by ${createdBlog.author} added`, 'success')
     } catch {
-      setErrorMessage('blog could not be created')
+      showNotification('blog could not be created', 'error')
     }
   }
 
   if (user === null) {
     return (
       <div>
+        <Notification notification={notification} />
         <h2>Log in to application</h2>
-        {errorMessage && <div>{errorMessage}</div>}
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -114,12 +131,12 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification} />
       <h2>blogs</h2>
       <div>
         {user.name} logged in
         <button type="button" onClick={handleLogout}>logout</button>
       </div>
-      {errorMessage && <div>{errorMessage}</div>}
       <h3>create new</h3>
       <form onSubmit={handleCreateBlog}>
         <div>
