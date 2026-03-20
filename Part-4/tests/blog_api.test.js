@@ -122,6 +122,31 @@ describe('deletion of a blog', () => {
   })
 })
 
+describe('updating a blog', () => {
+  test('succeeds in updating the likes of a blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const updatedBlog = {
+      ...blogToUpdate,
+      likes: 99,
+    }
+
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(response.body.likes, 99)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlogInDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+
+    assert.strictEqual(updatedBlogInDb.likes, 99)
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
