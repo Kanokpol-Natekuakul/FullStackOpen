@@ -1,12 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialAnecdotes = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...'
-]
-
-const initialState = initialAnecdotes.map((content, i) => ({ id: i + 1, content, votes: 0 }))
+// start with empty state; we'll load anecdotes from the backend on app start
+const initialState = []
 
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
@@ -26,9 +21,17 @@ const anecdoteSlice = createSlice({
       state.push({ id, content, votes: 0 })
       state.sort((a, b) => b.votes - a.votes)
     }
+    ,
+    setAnecdotes(state, action) {
+      // replace state with anecdotes from backend; ensure sorted
+      const arr = action.payload.slice()
+      arr.sort((a, b) => b.votes - a.votes)
+      return arr
+    }
   }
 })
 
 export const { voteAnecdote, createAnecdote } = anecdoteSlice.actions
+export const { setAnecdotes } = anecdoteSlice.actions
 
 export default anecdoteSlice.reducer
