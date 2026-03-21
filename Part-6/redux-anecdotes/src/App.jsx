@@ -1,5 +1,6 @@
 import React from 'react'
-import { voteAnecdote, createAnecdote } from './reducers/anecdoteReducer'
+import { voteAnecdote } from './reducers/anecdoteReducer'
+import AnecdoteForm from './components/AnecdoteForm'
 import { useSelector, useDispatch } from 'react-redux'
 
 function Anecdote({ a, onVote }) {
@@ -33,10 +34,7 @@ function App() {
     <div className="container">
       <h1>Anecdotes</h1>
 
-      <form onSubmit={add} className="add-form">
-        <input name="anecdote" placeholder="new anecdote" />
-        <button type="submit">add</button>
-      </form>
+      <AnecdoteForm />
 
       <div className="list">
         {sorted.map(a => (
