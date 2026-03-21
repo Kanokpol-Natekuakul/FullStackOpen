@@ -10,12 +10,14 @@ const anecdoteReducer = (state = initialState, action) => {
   switch (action.type) {
   case 'VOTE': {
     const id = action.payload
-    return state.map(a => a.id === id ? { ...a, votes: a.votes + 1 } : a)
+    const newState = state.map(a => a.id === id ? { ...a, votes: a.votes + 1 } : a)
+    return [...newState].sort((x, y) => y.votes - x.votes)
   }
   case 'ADD_ANECDOTE': {
     const content = action.payload
     const id = state.length ? Math.max(...state.map(a => a.id)) + 1 : 1
-    return [...state, { id, content, votes: 0 }]
+    const newState = [...state, { id, content, votes: 0 }]
+    return [...newState].sort((x, y) => y.votes - x.votes)
   }
   default:
     return state
