@@ -24,9 +24,9 @@ test('only the creator sees the blog delete button', async ({ page }) => {
 
   // Visit app and simulate logged-in userA via localStorage
   await page.goto(appUrl)
-  await page.evaluate((user, token) => {
+  await page.evaluate(({ user, token }) => {
     localStorage.setItem('loggedBlogappUser', JSON.stringify({ token, username: user.username, name: user.name }))
-  }, userA, tokenA)
+  }, { user: userA, token: tokenA })
   await page.reload()
 
   const blogCard = page.locator('div', { hasText: blog.title }).first()
@@ -38,9 +38,9 @@ test('only the creator sees the blog delete button', async ({ page }) => {
   const bodyB = await loginB.json()
   const tokenB = bodyB.token
 
-  await page.evaluate((user, token) => {
+  await page.evaluate(({ user, token }) => {
     localStorage.setItem('loggedBlogappUser', JSON.stringify({ token, username: user.username, name: user.name }))
-  }, userB, tokenB)
+  }, { user: userB, token: tokenB })
   await page.reload()
 
   const blogCardB = page.locator('div', { hasText: blog.title }).first()
