@@ -1,8 +1,8 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateAnecdote } from '../services/anecdotes'
-import { showNotification } from '../reducers/notificationReducer'
+import { useShowNotification } from '../context/NotificationContext'
 
 const AnecdoteItem = ({ a, onVote }) => (
   <div className="anecdote">
@@ -17,8 +17,8 @@ const AnecdoteItem = ({ a, onVote }) => (
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
   const filter = useSelector(state => state.filter)
-  const dispatch = useDispatch()
   const queryClient = useQueryClient()
+  const showNotification = useShowNotification()
 
   const mutation = useMutation({
     mutationFn: (anecdote) => updateAnecdote({ ...anecdote, votes: anecdote.votes + 1 }),
@@ -29,7 +29,7 @@ const AnecdoteList = () => {
 
   const vote = (anecdote) => {
     mutation.mutate(anecdote)
-    dispatch(showNotification(`you voted '${anecdote.content}'`, 10))
+    showNotification(`you voted '${anecdote.content}'`, 5)
   }
 
   const normalized = filter ? filter.toLowerCase() : ''
