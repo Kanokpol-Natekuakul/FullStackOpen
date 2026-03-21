@@ -6,6 +6,7 @@ import Anecdote from './components/Anecdote'
 import CreateNew from './components/CreateNew'
 import About from './components/About'
 import Footer from './components/Footer'
+import Notification from './components/Notification'
 
 const anecdotesData = [
   { content: 'If it hurts, do it more often', author: 'Jez Humble', info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html', votes: 0, id: 1 },
@@ -25,9 +26,15 @@ const AnecdoteView = ({ anecdotes }) => {
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState(anecdotesData)
+  const [notification, setNotification] = useState('')
 
   const addNew = (anecdote) => {
     setAnecdotes(anecdotes.concat({ ...anecdote, id: Math.round(Math.random() * 10000) }))
+  }
+
+  const notify = (message) => {
+    setNotification(message)
+    setTimeout(() => setNotification(''), 5000)
   }
 
   return (
@@ -35,10 +42,11 @@ const App = () => {
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
+        <Notification message={notification} />
         <Routes>
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/anecdotes/:id" element={<AnecdoteView anecdotes={anecdotes} />} />
-          <Route path="/create" element={<CreateNew addNew={addNew} />} />
+          <Route path="/create" element={<CreateNew addNew={addNew} notify={notify} />} />
           <Route path="/about" element={<About />} />
         </Routes>
         <Footer />

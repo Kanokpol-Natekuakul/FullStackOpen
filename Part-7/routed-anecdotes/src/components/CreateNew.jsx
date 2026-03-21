@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-const CreateNew = ({ addNew }) => {
+const CreateNew = ({ addNew, notify }) => {
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
@@ -9,6 +9,7 @@ const CreateNew = ({ addNew }) => {
     const author = e.target.author.value.trim()
     const info = e.target.info.value.trim()
     addNew({ content, author, info, votes: 0 })
+    notify(`a new anecdote '${content}' created!`)
     navigate('/')
   }
 
