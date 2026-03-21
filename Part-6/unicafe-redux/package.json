@@ -1,0 +1,12 @@
+{
+  "name": "unicafe-redux",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "deep-freeze": "^0.0.1",
+    "vitest": "^1.0.0"
+  }
+}
