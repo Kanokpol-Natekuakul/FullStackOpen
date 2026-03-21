@@ -9,8 +9,8 @@ const CreateNew = ({ addNew, notify }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    addNew({ content: content.value, author: author.value, info: info.value, votes: 0 })
-    notify(`a new anecdote '${content.value}' created!`)
+    addNew({ content: content.inputProps.value, author: author.inputProps.value, info: info.inputProps.value, votes: 0 })
+    notify(`a new anecdote '${content.inputProps.value}' created!`)
     navigate('/')
   }
 
@@ -20,16 +20,13 @@ const CreateNew = ({ addNew, notify }) => {
     info.reset()
   }
 
-  // exclude reset from props spread onto <input>
-  const inputProps = ({ reset, ...rest }) => rest
-
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>content <input {...inputProps(content)} /></div>
-        <div>author <input {...inputProps(author)} /></div>
-        <div>url for more info <input {...inputProps(info)} /></div>
+        <div>content <input {...content.inputProps} /></div>
+        <div>author <input {...author.inputProps} /></div>
+        <div>url for more info <input {...info.inputProps} /></div>
         <button type="submit">create</button>
         <button type="button" onClick={handleReset}>reset</button>
       </form>
