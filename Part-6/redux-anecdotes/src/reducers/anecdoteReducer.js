@@ -24,4 +24,8 @@ const anecdoteReducer = (state = initialState, action) => {
   }
 }
 
+// action creators
+export const voteAnecdote = (id) => ({ type: 'VOTE', payload: id })
+export const createAnecdote = (content) => ({ type: 'ADD_ANECDOTE', payload: content })
+
 export default anecdoteReducer
