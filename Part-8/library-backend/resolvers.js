@@ -6,8 +6,14 @@ const resolvers = {
     bookCount: () => Book.countDocuments(),
     authorCount: () => Author.countDocuments(),
     allBooks: async (root, args) => {
-      // filtering by author/genre deferred to later exercises
-      return Book.find({}).populate('author')
+      const filter = {}
+      if (args.genre) filter.genres = { $in: [args.genre] }
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author })
+        if (!author) return []
+        filter.author = author._id
+      }
+      return Book.find(filter).populate('author')
     },
     allAuthors: () => Author.find({}),
   },
