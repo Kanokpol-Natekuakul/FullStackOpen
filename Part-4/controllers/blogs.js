@@ -87,4 +87,20 @@ blogsRouter.put('/:id', async (request, response) => {
   response.json(updatedBlog)
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const { comment } = request.body
+  if (!comment) {
+    return response.status(400).json({ error: 'comment is required' })
+  }
+
+  const blog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    { $push: { comments: comment } },
+    { returnDocument: 'after' }
+  ).populate('user', { username: 1, name: 1 })
+
+  if (!blog) return response.status(404).end()
+  response.json(blog)
+})
+
 module.exports = blogsRouter
