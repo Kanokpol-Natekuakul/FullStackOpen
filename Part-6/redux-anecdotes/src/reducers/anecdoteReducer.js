@@ -15,11 +15,11 @@ const anecdoteSlice = createSlice({
         state.sort((a, b) => b.votes - a.votes)
       }
     },
-    appendAnecdote(state, action) {
-      const anecdote = action.payload
-      state.push(anecdote)
-      state.sort((a, b) => b.votes - a.votes)
-    }
+      appendAnecdote(state, action) {
+        const anecdote = action.payload
+        state.push(anecdote)
+        state.sort((a, b) => b.votes - a.votes)
+      }
     ,
     setAnecdotes(state, action) {
       // replace state with anecdotes from backend; ensure sorted
