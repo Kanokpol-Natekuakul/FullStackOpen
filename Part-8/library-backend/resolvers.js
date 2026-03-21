@@ -1,6 +1,10 @@
 import { GraphQLError } from 'graphql'
+import jwt from 'jsonwebtoken'
 import Author from './models/Author.js'
 import Book from './models/Book.js'
+import User from './models/User.js'
+
+const HARDCODED_PASSWORD = 'secret'
 
 const resolvers = {
   Query: {
@@ -17,13 +21,42 @@ const resolvers = {
       return Book.find(filter).populate('author')
     },
     allAuthors: () => Author.find({}),
+    me: (root, args, context) => context.currentUser,
   },
   Author: {
     bookCount: async (author) =>
       Book.countDocuments({ author: author._id }),
   },
   Mutation: {
-    addBook: async (root, args) => {
+    createUser: async (root, args) => {
+      try {
+        const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
+        return user.save()
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: { code: 'BAD_USER_INPUT', error }
+        })
+      }
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+      if (!user || args.password !== HARDCODED_PASSWORD) {
+        throw new GraphQLError('wrong credentials', {
+          extensions: { code: 'BAD_USER_INPUT' }
+        })
+      }
+      const token = jwt.sign(
+        { username: user.username, id: user._id },
+        process.env.JWT_SECRET
+      )
+      return { value: token }
+    },
+    addBook: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: { code: 'UNAUTHENTICATED' }
+        })
+      }
       try {
         let author = await Author.findOne({ name: args.author })
         if (!author) {
@@ -39,7 +72,12 @@ const resolvers = {
         })
       }
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError('not authenticated', {
+          extensions: { code: 'UNAUTHENTICATED' }
+        })
+      }
       try {
         const author = await Author.findOne({ name: args.name })
         if (!author) return null
