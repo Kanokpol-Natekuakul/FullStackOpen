@@ -42,7 +42,8 @@ const Blog = ({ blog, currentUser, handleLike, handleDelete }) => {
               </button>
             </div>
           )}
-        </div>
+        cd e2e-playwright
+        npx playwright test        </div>
       )}
     </div>
   )
