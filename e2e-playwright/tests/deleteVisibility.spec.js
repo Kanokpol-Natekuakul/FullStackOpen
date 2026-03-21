@@ -43,7 +43,7 @@ test('only the creator sees the blog delete button', async ({ page }) => {
   }, { user: userB, token: tokenB })
   await page.reload()
 
-  const blogCardB = page.locator('div', { hasText: blog.title }).first()
-  await blogCardB.locator('button', { hasText: 'view' }).click()
-  await expect(blogCardB.locator('button', { hasText: 'remove' })).toHaveCount(0)
+    const blogCardB = page.locator('div', { hasText: blog.title }).first()
+    await blogCardB.locator('button', { hasText: 'view' }).click()
+    await expect(blogCardB.locator('button', { hasText: 'remove' })).toHaveCount(0)
 })
