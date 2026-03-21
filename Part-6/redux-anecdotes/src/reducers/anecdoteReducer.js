@@ -44,4 +44,16 @@ export const createAnecdote = (content) => {
   }
 }
 
+export const fetchAnecdotes = () => {
+  return async (dispatch) => {
+    try {
+      const res = await fetch('http://localhost:3001/anecdotes')
+      const data = await res.json()
+      dispatch(setAnecdotes(data))
+    } catch (e) {
+      console.error('fetchAnecdotes failed', e)
+    }
+  }
+}
+
 export default anecdoteSlice.reducer
