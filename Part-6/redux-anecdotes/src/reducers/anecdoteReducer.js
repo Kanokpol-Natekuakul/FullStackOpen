@@ -15,10 +15,9 @@ const anecdoteSlice = createSlice({
         state.sort((a, b) => b.votes - a.votes)
       }
     },
-    createAnecdote(state, action) {
-      const content = action.payload
-      const id = state.length ? Math.max(...state.map(a => a.id)) + 1 : 1
-      state.push({ id, content, votes: 0 })
+    appendAnecdote(state, action) {
+      const anecdote = action.payload
+      state.push(anecdote)
       state.sort((a, b) => b.votes - a.votes)
     }
     ,
@@ -31,7 +30,18 @@ const anecdoteSlice = createSlice({
   }
 })
 
-export const { voteAnecdote, createAnecdote } = anecdoteSlice.actions
-export const { setAnecdotes } = anecdoteSlice.actions
+export const { voteAnecdote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
+
+export const createAnecdote = (content) => {
+  return async (dispatch) => {
+    const response = await fetch('http://localhost:3001/anecdotes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content, votes: 0 })
+    })
+    const data = await response.json()
+    dispatch(appendAnecdote(data))
+  }
+}
 
 export default anecdoteSlice.reducer
