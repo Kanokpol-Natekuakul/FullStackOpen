@@ -14,14 +14,24 @@ const CreateNew = ({ addNew, notify }) => {
     navigate('/')
   }
 
+  const handleReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
+  // exclude reset from props spread onto <input>
+  const inputProps = ({ reset, ...rest }) => rest
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>content <input {...content} /></div>
-        <div>author <input {...author} /></div>
-        <div>url for more info <input {...info} /></div>
+        <div>content <input {...inputProps(content)} /></div>
+        <div>author <input {...inputProps(author)} /></div>
+        <div>url for more info <input {...inputProps(info)} /></div>
         <button type="submit">create</button>
+        <button type="button" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
