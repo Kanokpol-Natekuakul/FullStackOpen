@@ -28,7 +28,6 @@ function App() {
     form.elements['anecdote'].value = ''
   }
 
-  const sorted = [...anecdotes].sort((a, b) => b.votes - a.votes)
 
   return (
     <div className="container">
@@ -36,11 +35,7 @@ function App() {
 
       <AnecdoteForm />
 
-      <div className="list">
-        {sorted.map(a => (
-          <Anecdote key={a.id} a={a} onVote={vote} />
-        ))}
-      </div>
+        <AnecdoteList />
     </div>
   )
 }
