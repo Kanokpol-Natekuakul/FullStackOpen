@@ -12,7 +12,7 @@ const AnecdoteForm = () => {
     const value = form.elements['anecdote'].value.trim()
     if (!value) return
     dispatch(createAnecdote(value))
-    dispatch(showNotification(`you created '${value}'`, 5000))
+    dispatch(showNotification(`you created '${value}'`, 5))
     form.elements['anecdote'].value = ''
   }
 

@@ -20,7 +20,7 @@ const AnecdoteList = () => {
 
   const vote = (anecdote) => {
     dispatch(voteAnecdote(anecdote.id))
-    dispatch(showNotification(`you voted '${anecdote.content}'`, 5000))
+    dispatch(showNotification(`you voted '${anecdote.content}'`, 10))
   }
 
   const normalized = filter ? filter.toLowerCase() : ''
