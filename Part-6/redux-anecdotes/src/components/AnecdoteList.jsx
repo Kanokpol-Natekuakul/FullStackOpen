@@ -13,16 +13,21 @@ const AnecdoteItem = ({ a, onVote }) => (
 )
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
+  const filter = useSelector(state => state.filter)
   const dispatch = useDispatch()
 
   const vote = (id) => dispatch(voteAnecdote(id))
 
-  const sorted = [...anecdotes].sort((a, b) => b.votes - a.votes)
+  const normalized = filter ? filter.toLowerCase() : ''
+  const visible = anecdotes
+    .filter(a => a.content.toLowerCase().includes(normalized))
+    .slice()
+    .sort((a, b) => b.votes - a.votes)
 
   return (
     <div className="list">
-      {sorted.map(a => (
+      {visible.map(a => (
         <AnecdoteItem key={a.id} a={a} onVote={vote} />
       ))}
     </div>

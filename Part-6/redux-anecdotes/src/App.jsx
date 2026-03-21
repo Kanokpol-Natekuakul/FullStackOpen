@@ -1,41 +1,15 @@
 import React from 'react'
-import { voteAnecdote } from './reducers/anecdoteReducer'
 import AnecdoteForm from './components/AnecdoteForm'
-import { useSelector, useDispatch } from 'react-redux'
+import AnecdoteList from './components/AnecdoteList'
+import Filter from './components/Filter'
 
-function Anecdote({ a, onVote }) {
+const App = () => {
   return (
-    <div className="anecdote">
-      <div className="content">{a.content}</div>
-      <div className="meta">
-        <span>has {a.votes} votes</span>
-        <button onClick={() => onVote(a.id)}>vote</button>
-      </div>
-    </div>
-  )
-}
-
-function App() {
-  const anecdotes = useSelector(state => state)
-  const dispatch = useDispatch()
-  const vote = (id) => dispatch(voteAnecdote(id))
-  const add = (e) => {
-    e.preventDefault()
-    const form = e.target
-    const value = form.elements['anecdote'].value.trim()
-    if (!value) return
-    dispatch(createAnecdote(value))
-    form.elements['anecdote'].value = ''
-  }
-
-
-  return (
-    <div className="container">
-      <h1>Anecdotes</h1>
-
+    <div>
+      <h2>Anecdotes</h2>
+      <Filter />
+      <AnecdoteList />
       <AnecdoteForm />
-
-        <AnecdoteList />
     </div>
   )
 }
