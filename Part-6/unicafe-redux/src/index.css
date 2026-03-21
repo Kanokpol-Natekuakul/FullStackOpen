@@ -1,0 +1,9 @@
+body { font-family: Arial, Helvetica, sans-serif; padding: 1rem; background: #f7f7f7; }
+.container { max-width: 640px; margin: 0 auto; background: #fff; padding: 1rem 1.25rem; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.buttons { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem }
+button { padding:0.5rem 0.8rem; border:1px solid #ddd; background:#fafafa; cursor:pointer; border-radius:4px }
+button.reset { margin-left:auto; background:#ffecec }
+.stats { display:flex; flex-direction:column; gap:0.4rem; }
+.stat { display:flex; justify-content:space-between; padding:0.25rem 0.5rem; border-bottom:1px dashed #eee }
+.label { color:#333 }
+.value { font-weight:600 }
