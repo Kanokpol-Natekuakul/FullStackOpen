@@ -12,6 +12,9 @@ const AnecdoteForm = () => {
     onSuccess: (newAnecdote) => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
       showNotification(`you created '${newAnecdote.content}'`, 5)
+    },
+    onError: (error) => {
+      showNotification(`failed to create anecdote: ${error.response?.data?.error || error.message}`, 5)
     }
   })
 
@@ -19,7 +22,7 @@ const AnecdoteForm = () => {
     e.preventDefault()
     const input = e.target.elements['anecdote']
     const value = input.value.trim()
-    if (value.length < 5) return
+    if (!value) return
     mutation.mutate(value)
     input.value = ''
   }
