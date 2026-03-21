@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import blogService from '../services/blogs'
-import loginService from '../services/login'
+import { setToken } from '../services/blogs'
+import { login as loginService } from '../services/login'
 
 const LOCAL_KEY = 'loggedBlogappUser'
 
@@ -8,12 +8,8 @@ const userSlice = createSlice({
   name: 'user',
   initialState: null,
   reducers: {
-    setUser(state, action) {
-      return action.payload
-    },
-    clearUser() {
-      return null
-    }
+    setUser(state, action) { return action.payload },
+    clearUser() { return null }
   }
 })
 
@@ -24,21 +20,21 @@ export const initializeUser = () => (dispatch) => {
   if (stored) {
     const user = JSON.parse(stored)
     dispatch(setUser(user))
-    blogService.setToken(user.token)
+    setToken(user.token)
   }
 }
 
 export const loginUser = (credentials) => async (dispatch) => {
-  const user = await loginService.login(credentials)
+  const user = await loginService(credentials)
   window.localStorage.setItem(LOCAL_KEY, JSON.stringify(user))
-  blogService.setToken(user.token)
+  setToken(user.token)
   dispatch(setUser(user))
   return user
 }
 
 export const logoutUser = () => (dispatch) => {
   window.localStorage.removeItem(LOCAL_KEY)
-  blogService.setToken(null)
+  setToken(null)
   dispatch(clearUser())
 }
 

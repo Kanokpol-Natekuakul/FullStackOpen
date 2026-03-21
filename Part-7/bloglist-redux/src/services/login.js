@@ -1,8 +1,2 @@
 import axios from 'axios'
-
-const login = async (credentials) => {
-  const res = await axios.post('/api/login', credentials)
-  return res.data
-}
-
-export default { login }
+export const login = (credentials) => axios.post('/api/login', credentials).then(r => r.data)

@@ -14,9 +14,7 @@ const BlogForm = ({ onCreated }) => {
     try {
       const created = await dispatch(createBlog({ title, author, url }))
       dispatch(showNotification(`a new blog ${created.title} by ${created.author} added`))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      setTitle(''); setAuthor(''); setUrl('')
       onCreated()
     } catch {
       dispatch(showNotification('blog could not be created', 'error'))
@@ -27,9 +25,9 @@ const BlogForm = ({ onCreated }) => {
     <div>
       <h3>create new</h3>
       <form onSubmit={handleSubmit}>
-        <div>title <input value={title} name="Title" onChange={e => setTitle(e.target.value)} /></div>
-        <div>author <input value={author} name="Author" onChange={e => setAuthor(e.target.value)} /></div>
-        <div>url <input value={url} name="Url" onChange={e => setUrl(e.target.value)} /></div>
+        <div>title <input value={title} onChange={e => setTitle(e.target.value)} /></div>
+        <div>author <input value={author} onChange={e => setAuthor(e.target.value)} /></div>
+        <div>url <input value={url} onChange={e => setUrl(e.target.value)} /></div>
         <button type="submit">create</button>
       </form>
     </div>

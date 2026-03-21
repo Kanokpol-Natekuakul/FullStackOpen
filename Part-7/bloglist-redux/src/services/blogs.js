@@ -2,25 +2,14 @@ import axios from 'axios'
 const baseUrl = '/api/blogs'
 let token = null
 
-const setToken = (newToken) => {
+export const setToken = (newToken) => {
   token = newToken ? `Bearer ${newToken}` : null
 }
 
-const getAll = () =>
-  axios.get(baseUrl).then(res => res.data)
+export const getAll = () => axios.get(baseUrl).then(r => r.data)
+export const create = (blog) => axios.post(baseUrl, blog, { headers: { Authorization: token } }).then(r => r.data)
+export const update = (id, blog) => axios.put(`${baseUrl}/${id}`, blog).then(r => r.data)
+export const remove = (id) => axios.delete(`${baseUrl}/${id}`, { headers: { Authorization: token } })
+export const addComment = (id, comment) => axios.post(`${baseUrl}/${id}/comments`, { comment }).then(r => r.data)
 
-const create = async (newBlog) => {
-  const res = await axios.post(baseUrl, newBlog, { headers: { Authorization: token } })
-  return res.data
-}
-
-const update = async (id, updatedBlog) => {
-  const res = await axios.put(`${baseUrl}/${id}`, updatedBlog)
-  return res.data
-}
-
-const remove = async (id) => {
-  await axios.delete(`${baseUrl}/${id}`, { headers: { Authorization: token } })
-}
-
-export default { getAll, setToken, create, update, remove }
+export default { setToken, getAll, create, update, remove, addComment }
