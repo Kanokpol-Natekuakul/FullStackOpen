@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@apollo/server": "^5.0.0",
-    "graphql": "^16.8.0"
+    "dotenv": "^16.0.0",
+    "graphql": "^16.8.0",
+    "mongoose": "^8.0.0"
   }
 }

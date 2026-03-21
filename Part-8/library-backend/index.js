@@ -1,88 +1,13 @@
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
+import mongoose from 'mongoose'
+import 'dotenv/config'
+import typeDefs from './schema.js'
+import resolvers from './resolvers.js'
 
-const authors = [
-  { name: 'Robert Martin', born: 1952 },
-  { name: 'Martin Fowler', born: 1963 },
-  { name: 'Fyodor Dostoevsky', born: 1821 },
-  { name: 'Joshua Kerievsky' },
-  { name: 'Sandi Metz' },
-]
-
-const books = [
-  { title: 'Clean Code', published: 2008, author: 'Robert Martin', genres: ['refactoring'] },
-  { title: 'Agile software development', published: 2002, author: 'Robert Martin', genres: ['agile', 'patterns', 'design'] },
-  { title: 'Refactoring, edition 2', published: 2018, author: 'Martin Fowler', genres: ['refactoring'] },
-  { title: 'Refactoring to patterns', published: 2008, author: 'Joshua Kerievsky', genres: ['refactoring', 'patterns'] },
-  { title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby', published: 2012, author: 'Sandi Metz', genres: ['refactoring', 'design'] },
-  { title: 'Crime and punishment', published: 1866, author: 'Fyodor Dostoevsky', genres: ['classic', 'crime'] },
-  { title: 'The Demon', published: 1872, author: 'Fyodor Dostoevsky', genres: ['classic', 'revolution'] },
-]
-
-const typeDefs = `
-  type Author {
-    name: String!
-    born: Int
-    bookCount: Int!
-  }
-
-  type Book {
-    title: String!
-    author: String!
-    published: Int!
-    genres: [String!]!
-  }
-
-  type Query {
-    bookCount: Int!
-    authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]!
-  }
-
-  type Mutation {
-    addBook(
-      title: String!
-      author: String!
-      published: Int!
-      genres: [String!]!
-    ): Book!
-    editAuthor(name: String!, setBornTo: Int!): Author
-  }
-`
-
-const resolvers = {
-  Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      let result = books
-      if (args.author) result = result.filter(b => b.author === args.author)
-      if (args.genre) result = result.filter(b => b.genres.includes(args.genre))
-      return result
-    },
-    allAuthors: () => authors,
-  },
-  Author: {
-    bookCount: (author) => books.filter(b => b.author === author.name).length,
-  },
-  Mutation: {
-    addBook: (root, args) => {
-      if (!authors.find(a => a.name === args.author)) {
-        authors.push({ name: args.author, born: null })
-      }
-      const book = { ...args }
-      books.push(book)
-      return book
-    },
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
-      if (!author) return null
-      author.born = args.setBornTo
-      return author
-    }
-  }
-}
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('connected to MongoDB'))
+  .catch(err => console.error('error connecting to MongoDB:', err))
 
 const server = new ApolloServer({ typeDefs, resolvers })
 
