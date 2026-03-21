@@ -1,0 +1,10 @@
+{
+  "notes": [
+    { "id": 1, "content": "the number of the beast is 666" },
+    { "id": 2, "content": "the evil is a name of the beast" }
+  ],
+  "persons": [
+    { "id": 1, "name": "Arto Hellas", "number": "040-123456" },
+    { "id": 2, "name": "Ada Lovelace", "number": "040-654321" }
+  ]
+}
