@@ -1,0 +1,108 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - heading "blogs" [level=2] [ref=e4]
+  - generic [ref=e5]:
+    - text: Superuser logged in
+    - button "logout" [ref=e6]
+  - button "create new blog" [ref=e8]
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - text: Blog to like E2E
+      - button "hide" [ref=e11]
+    - generic [ref=e12]:
+      - generic [ref=e13]: http://like.example
+      - generic [ref=e14]:
+        - text: likes 0
+        - button "like" [ref=e15]
+      - generic [ref=e16]: Superuser
+      - text: cd e2e-playwright npx playwright test
+  - generic [ref=e18]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e19]
+  - generic [ref=e21]:
+    - text: Blog to like E2E
+    - button "view" [ref=e22]
+  - generic [ref=e24]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e25]
+  - generic [ref=e27]:
+    - text: Blog to like E2E
+    - button "view" [ref=e28]
+  - generic [ref=e30]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e31]
+  - generic [ref=e33]:
+    - text: Blog to like 1774068348794 E2E
+    - button "view" [ref=e34]
+  - generic [ref=e36]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e37]
+  - generic [ref=e39]:
+    - text: Blog to like 1774068581591 E2E
+    - button "view" [ref=e40]
+  - generic [ref=e42]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e43]
+  - generic [ref=e45]:
+    - text: Blog to like 1774068702989 E2E
+    - button "view" [ref=e46]
+  - generic [ref=e48]:
+    - text: Blog to delete 1774068702966 E2E
+    - button "view" [ref=e49]
+  - generic [ref=e51]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e52]
+  - generic [ref=e54]:
+    - text: Blog to like 1774068747741 E2E
+    - button "view" [ref=e55]
+  - generic [ref=e57]:
+    - text: Blog to delete 1774068747633 E2E
+    - button "view" [ref=e58]
+  - generic [ref=e60]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e61]
+  - generic [ref=e63]:
+    - text: Blog to like 1774068830706 E2E
+    - button "view" [ref=e64]
+  - generic [ref=e66]:
+    - text: Blog to delete 1774068830555 E2E
+    - button "view" [ref=e67]
+  - generic [ref=e69]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e70]
+  - generic [ref=e72]:
+    - text: Blog to like 1774068916746 E2E
+    - button "view" [ref=e73]
+  - generic [ref=e75]:
+    - text: Blog to delete 1774068916745 E2E
+    - button "view" [ref=e76]
+  - generic [ref=e78]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e79]
+  - generic [ref=e81]:
+    - text: Blog to delete 1774068970038 E2E
+    - button "view" [ref=e82]
+  - generic [ref=e84]:
+    - text: Blog to like 1774068969827 E2E
+    - button "view" [ref=e85]
+  - generic [ref=e87]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e88]
+  - generic [ref=e90]:
+    - text: Blog to like 1774069021323 E2E
+    - button "view" [ref=e91]
+  - generic [ref=e93]:
+    - text: Blog to delete 1774069021364 E2E
+    - button "view" [ref=e94]
+  - generic [ref=e96]:
+    - text: E2E created blog Playwright
+    - button "view" [ref=e97]
+  - generic [ref=e99]:
+    - text: Blog to delete 1774069075633 E2E
+    - button "view" [ref=e100]
+  - generic [ref=e102]:
+    - text: Blog to like 1774069075631 E2E
+    - button "view" [ref=e103]
+```
