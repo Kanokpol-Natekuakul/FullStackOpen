@@ -6,15 +6,17 @@ export const calculateBmi = (height: number, weight: number): string => {
   return 'Obese'
 }
 
-const args = process.argv.slice(2)
-if (args.length === 2) {
-  const height = Number(args[0])
-  const weight = Number(args[1])
-  if (isNaN(height) || isNaN(weight)) {
-    console.error('Please provide numeric values for height and weight')
-    process.exit(1)
+if (require.main === module) {
+  const args = process.argv.slice(2)
+  if (args.length === 2) {
+    const height = Number(args[0])
+    const weight = Number(args[1])
+    if (isNaN(height) || isNaN(weight)) {
+      console.error('Please provide numeric values for height and weight')
+      process.exit(1)
+    }
+    console.log(calculateBmi(height, weight))
+  } else {
+    console.log(calculateBmi(180, 74))
   }
-  console.log(calculateBmi(height, weight))
-} else {
-  console.log(calculateBmi(180, 74))
 }

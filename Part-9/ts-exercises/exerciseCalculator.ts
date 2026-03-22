@@ -1,4 +1,4 @@
-interface Result {
+export interface Result {
   periodLength: number
   trainingDays: number
   success: boolean
@@ -30,15 +30,17 @@ export const calculateExercises = (hours: number[], target: number): Result => {
   return { periodLength, trainingDays, success, rating, ratingDescription, target, average }
 }
 
-const args = process.argv.slice(2)
-if (args.length >= 2) {
-  const target = Number(args[0])
-  const hours = args.slice(1).map(Number)
-  if (isNaN(target) || hours.some(isNaN)) {
-    console.error('Please provide numeric values only')
-    process.exit(1)
+if (require.main === module) {
+  const args = process.argv.slice(2)
+  if (args.length >= 2) {
+    const target = Number(args[0])
+    const hours = args.slice(1).map(Number)
+    if (isNaN(target) || hours.some(isNaN)) {
+      console.error('Please provide numeric values only')
+      process.exit(1)
+    }
+    console.log(calculateExercises(hours, target))
+  } else {
+    console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
   }
-  console.log(calculateExercises(hours, target))
-} else {
-  console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
 }
