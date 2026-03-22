@@ -1,8 +1,12 @@
 import { GraphQLError } from 'graphql'
+import { PubSub } from 'graphql-subscriptions'
 import jwt from 'jsonwebtoken'
 import Author from './models/Author.js'
 import Book from './models/Book.js'
 import User from './models/User.js'
+
+const pubsub = new PubSub()
+const BOOK_ADDED = 'BOOK_ADDED'
 
 const HARDCODED_PASSWORD = 'secret'
 
@@ -65,7 +69,9 @@ const resolvers = {
         }
         const book = new Book({ ...args, author: author._id })
         await book.save()
-        return book.populate('author')
+        const populated = await book.populate('author')
+        pubsub.publish(BOOK_ADDED, { bookAdded: populated })
+        return populated
       } catch (error) {
         throw new GraphQLError(error.message, {
           extensions: { code: 'BAD_USER_INPUT', error }
@@ -89,6 +95,11 @@ const resolvers = {
         })
       }
     },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator([BOOK_ADDED])
+    }
   },
 }
 

@@ -43,6 +43,10 @@ const typeDefs = `
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 export default typeDefs
