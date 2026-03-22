@@ -1,5 +1,6 @@
 import express from 'express';
 import { v1 as uuid } from 'uuid';
+import { z } from 'zod';
 import patients from '../data/patients';
 import { Patient, PublicPatient } from '../types';
 import { toNewPatient } from '../utils';
@@ -22,8 +23,11 @@ router.post('/', (req, res) => {
     patients.push(patient);
     res.json(patient);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    res.status(400).json({ error: message });
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: error.issues });
+    } else {
+      res.status(400).json({ error: 'Unknown error' });
+    }
   }
 });
 
