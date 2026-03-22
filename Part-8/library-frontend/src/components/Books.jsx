@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
-// Fetch all books once to extract genres list
 const Books = () => {
   const [selectedGenre, setSelectedGenre] = useState(null)
   const allBooksResult = useQuery(ALL_BOOKS)
   const filteredResult = useQuery(ALL_BOOKS, {
     variables: { genre: selectedGenre },
-    skip: !selectedGenre
+    skip: !selectedGenre,
+    fetchPolicy: 'cache-and-network'
   })
 
   if (allBooksResult.loading) return <div>loading...</div>
@@ -18,6 +18,11 @@ const Books = () => {
   const books = selectedGenre
     ? (filteredResult.data?.allBooks || [])
     : allBooks
+
+  const selectGenre = (genre) => {
+    setSelectedGenre(genre)
+    if (genre) filteredResult.refetch({ genre })
+  }
 
   return (
     <div>
@@ -43,7 +48,7 @@ const Books = () => {
       </table>
       <div>
         {genres.map(g => (
-          <button key={g} onClick={() => setSelectedGenre(g)}>{g}</button>
+          <button key={g} onClick={() => selectGenre(g)}>{g}</button>
         ))}
         <button onClick={() => setSelectedGenre(null)}>all genres</button>
       </div>
