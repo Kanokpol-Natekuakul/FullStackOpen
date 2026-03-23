@@ -2,8 +2,8 @@ import express from 'express';
 import { v1 as uuid } from 'uuid';
 import { z } from 'zod';
 import patients from '../data/patients';
-import { Patient, PublicPatient } from '../types';
-import { toNewPatient } from '../utils';
+import { Patient, PublicPatient, Entry } from '../types';
+import { toNewPatient, toNewEntry } from '../utils';
 
 const router = express.Router();
 
@@ -31,6 +31,26 @@ router.post('/', (req, res) => {
     const patient: Patient = { id: uuid(), ...newPatient };
     patients.push(patient);
     res.json(patient);
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: error.issues });
+    } else {
+      res.status(400).json({ error: 'Unknown error' });
+    }
+  }
+});
+
+router.post('/:id/entries', (req, res) => {
+  const patient = patients.find(p => p.id === req.params.id);
+  if (!patient) {
+    res.status(404).json({ error: 'Patient not found' });
+    return;
+  }
+  try {
+    const newEntry = toNewEntry(req.body);
+    const entry: Entry = { id: uuid(), ...newEntry };
+    patient.entries.push(entry);
+    res.json(entry);
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       res.status(400).json({ error: error.issues });
