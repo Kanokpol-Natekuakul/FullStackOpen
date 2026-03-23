@@ -16,6 +16,15 @@ router.get('/', (_req, res) => {
   res.json(publicPatients);
 });
 
+router.get('/:id', (req, res) => {
+  const patient = patients.find(p => p.id === req.params.id);
+  if (!patient) {
+    res.status(404).json({ error: 'Patient not found' });
+    return;
+  }
+  res.json(patient);
+});
+
 router.post('/', (req, res) => {
   try {
     const newPatient = toNewPatient(req.body);
