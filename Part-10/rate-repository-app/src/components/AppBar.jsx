@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   tab: {
     paddingHorizontal: 15,
