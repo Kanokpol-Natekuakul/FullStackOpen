@@ -1,13 +1,14 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
+import theme from '../theme';
 
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.white,
   },
   topRow: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   avatar: {
     width: 50,
@@ -17,25 +18,30 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
+    justifyContent: 'space-between',
   },
   fullName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: theme.fontSizes.subheading,
+    fontWeight: theme.fontWeights.bold,
+    color: theme.colors.textPrimary,
     marginBottom: 4,
   },
   description: {
-    color: '#666',
-    marginBottom: 6,
+    color: theme.colors.textSecondary,
+    fontSize: theme.fontSizes.body,
+    marginBottom: 8,
+    flexWrap: 'wrap',
   },
   languageBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#0366d6',
-    color: 'white',
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.white,
     paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingVertical: 4,
     borderRadius: 4,
     overflow: 'hidden',
-    fontSize: 13,
+    fontSize: theme.fontSizes.body,
+    fontWeight: theme.fontWeights.bold,
   },
   statsRow: {
     flexDirection: 'row',
@@ -45,12 +51,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statValue: {
-    fontWeight: 'bold',
-    fontSize: 15,
+    fontWeight: theme.fontWeights.bold,
+    fontSize: theme.fontSizes.subheading,
+    color: theme.colors.textPrimary,
   },
   statLabel: {
-    color: '#666',
-    fontSize: 12,
+    color: theme.colors.textSecondary,
+    fontSize: theme.fontSizes.body,
+    marginTop: 2,
   },
 });
 
@@ -58,6 +66,27 @@ const formatCount = (count) => {
   if (count >= 1000) return `${(count / 1000).toFixed(1)}k`;
   return String(count);
 };
+
+const RepositoryStats = ({ item }) => (
+  <View style={styles.statsRow}>
+    <View style={styles.stat}>
+      <Text style={styles.statValue}>{formatCount(item.stargazersCount)}</Text>
+      <Text style={styles.statLabel}>Stars</Text>
+    </View>
+    <View style={styles.stat}>
+      <Text style={styles.statValue}>{formatCount(item.forksCount)}</Text>
+      <Text style={styles.statLabel}>Forks</Text>
+    </View>
+    <View style={styles.stat}>
+      <Text style={styles.statValue}>{item.ratingAverage}</Text>
+      <Text style={styles.statLabel}>Rating</Text>
+    </View>
+    <View style={styles.stat}>
+      <Text style={styles.statValue}>{item.reviewCount}</Text>
+      <Text style={styles.statLabel}>Reviews</Text>
+    </View>
+  </View>
+);
 
 const RepositoryItem = ({ item }) => {
   return (
@@ -70,24 +99,7 @@ const RepositoryItem = ({ item }) => {
           <Text style={styles.languageBadge}>{item.language}</Text>
         </View>
       </View>
-      <View style={styles.statsRow}>
-        <View style={styles.stat}>
-          <Text style={styles.statValue}>{formatCount(item.stargazersCount)}</Text>
-          <Text style={styles.statLabel}>Stars</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statValue}>{formatCount(item.forksCount)}</Text>
-          <Text style={styles.statLabel}>Forks</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statValue}>{item.ratingAverage}</Text>
-          <Text style={styles.statLabel}>Rating</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text style={styles.statValue}>{item.reviewCount}</Text>
-          <Text style={styles.statLabel}>Reviews</Text>
-        </View>
-      </View>
+      <RepositoryStats item={item} />
     </View>
   );
 };
