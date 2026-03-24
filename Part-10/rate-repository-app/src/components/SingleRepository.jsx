@@ -123,11 +123,13 @@ const ReviewItem = ({ review, showActions, onDelete, onViewRepository }) => (
   </View>
 );
 
+const REVIEWS_FIRST = 4;
+
 const SingleRepository = ({ showActions = false }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data, loading, refetch } = useQuery(GET_REPOSITORY, {
-    variables: { id },
+  const { data, loading, fetchMore, refetch } = useQuery(GET_REPOSITORY, {
+    variables: { id, first: REVIEWS_FIRST },
     fetchPolicy: 'cache-and-network',
   });
   const [deleteReview] = useMutation(DELETE_REVIEW);
@@ -136,6 +138,15 @@ const SingleRepository = ({ showActions = false }) => {
 
   const repository = data.repository;
   const reviews = repository.reviews.edges.map((edge) => edge.node);
+  const { hasNextPage, endCursor } = repository.reviews.pageInfo;
+
+  const handleFetchMore = () => {
+    if (hasNextPage) {
+      fetchMore({
+        variables: { id, first: REVIEWS_FIRST, after: endCursor },
+      });
+    }
+  };
 
   const handleDelete = (reviewId) => {
     Alert.alert(
@@ -168,6 +179,8 @@ const SingleRepository = ({ showActions = false }) => {
       keyExtractor={(item) => item.id}
       ListHeaderComponent={() => <RepositoryInfo repository={repository} showGitHubButton={!showActions} />}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={handleFetchMore}
+      onEndReachedThreshold={0.5}
     />
   );
 };
