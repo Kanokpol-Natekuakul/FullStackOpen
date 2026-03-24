@@ -44,7 +44,7 @@ const AppBar = () => {
     apolloClient.resetStore();
   };
 
-  const isSignedIn = data?.me;
+  const isSignedIn = Boolean(data?.me);
 
   return (
     <View style={styles.container}>
