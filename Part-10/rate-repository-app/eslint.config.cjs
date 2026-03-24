@@ -4,7 +4,7 @@ const globals = require('globals');
 
 module.exports = [
   {
-    ignores: ['node_modules/**', 'eslint.config.cjs', 'app.config.js'],
+    ignores: ['node_modules/**', 'eslint.config.cjs', 'app.config.js', 'babel.config.js', 'jest.setup.js', 'src/__mocks__/**'],
   },
   js.configs.recommended,
   {
