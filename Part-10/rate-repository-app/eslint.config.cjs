@@ -4,7 +4,7 @@ const globals = require('globals');
 
 module.exports = [
   {
-    ignores: ['node_modules/**', 'eslint.config.cjs'],
+    ignores: ['node_modules/**', 'eslint.config.cjs', 'app.config.js'],
   },
   js.configs.recommended,
   {
